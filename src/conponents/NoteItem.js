@@ -10,9 +10,11 @@ class NoteItem extends Component {
         // công việc 2 lấy dữ liệu
         this.props.GetEditData(this.props.note);
       }
+      // công vuệc xóa phần tử
       deleteData = () => {
         this.props.GetDeleteData(this.props.note.key);
         // console.log(this.props.note);
+        this.props.AlertOn("xóa phần tử" + " " + this.props.note.NoteTitle + " " + "thành công" , "danger");
       }
     render() {
         return (
@@ -40,11 +42,13 @@ class NoteItem extends Component {
         );
     }
 }
+// sử dụng :  store chuyền đến các component là công dụng cửa mapStateToProps  (NHƯ KIỂU PHÂN PHỐI ĐẾN CÁC ĐẠI LÝ)
 const mapStateToProps = (state, ownProps) => {
   return {
     isEdit: state.isEdit
   }
 }
+// sử dụng : muốn thay đổi thuộc tính ở store mà đang ở 1 component lạ thì dùng mapDispatchToProps
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     ChangEditstatus: () => {
@@ -62,6 +66,17 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch({
         type: "DELETE",
         deleteID
+      })
+    },
+    AlertOn: (AlertContent) => {
+      dispatch({
+        type:"ALERT_ON",
+        AlertContent
+      })
+    },
+    AlertOff: () => {
+      dispatch({
+        type:"ALERT_OFF"
       })
     }
   }

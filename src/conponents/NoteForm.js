@@ -33,31 +33,24 @@ class NoteForm extends Component {
   }
 
   addData = (title,content) => {
-    if(this.state.id)
+    if(this.state.id)   // trường hợp sửa dựa vào thông tin ID , title , content
     {
         var editObject = {};
         editObject.id = this.state.id;
         editObject.NoteTitle = this.state.NoteTitle;
         editObject.NoteContents = this.state.NoteContents;
-
-
         this.props.EditDataStore(editObject);
-        console.log("dang sưa dữ liệu");
+        this.props.ChangeEditStatus(); //tắt form đi khi quá trình lưu thành công
+        this.props.AlertOn("sửa thành công ","success"); // hiển thị thông báo bootstrap
     }
-    else
+    else    // trường hợp thêm mới 
     {
       var item =  {};
       item.NoteTitle = title;
       item.NoteContents = content;
       // // gửi dữ liệu lên app để app xử lý
-      // this.props.getdata(item)
-      // // thông báo
-      // console.log("dữ liệu nhập thành công tên là" + JSON.stringify(item) + "ngon lắm em");
-      // var item = JSON.stringify(item);
-      // tham só nhận ở AddData vẫn phải giữ nguyên nhé
       this.props.AddDataUp(item);
-      this.props.ChangeEditStatus(); //tắt form đi khi quá trình lưu thành công
-       console.log("dữ liệu nhập thành công tên là" + JSON.stringify(item) + "ngon lắm em");
+      this.props.AlertOn("thêm mới thành công","success");  // hiển thị thông báo bootstrap
     }
   }
 
@@ -94,14 +87,14 @@ class NoteForm extends Component {
         );
     }
 }
-// công dụng : thanh đổi những thuộc tính state ở store
+// sử dụng :  store chuyền đến các component là công dụng cửa mapStateToProps  (NHƯ KIỂU PHÂN PHỐI ĐẾN CÁC ĐẠI LÝ)
 const mapStateToProps = (state, ownProps) => {
   return {
     EditItem:state.EditItem,
     addStatus : state.isAdd
   }
 }
-// công dụng : sử dụng hàm nào trong store thì chỉ ra nó
+// sử dụng : muốn thay đổi thuộc tính ở store mà đang ở 1 component lạ thì dùng mapDispatchToProps
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     // nhanvao được truyền từ STORE.js
@@ -121,6 +114,18 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     ChangeEditStatus: () => {
       dispatch({
         type:"CHANGE_EDIT_STATUS"
+      })
+    },
+    AlertOn: (AlertContent , AlertStyle) => {
+      dispatch({
+        type:"ALERT_ON",
+        AlertContent,
+        AlertStyle
+      })
+    },
+    AlertOff: () => {
+      dispatch({
+        type:"ALERT_OFF"
       })
     }
   }
